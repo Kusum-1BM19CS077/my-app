@@ -1,0 +1,131 @@
+<html lang="en">
+<style>
+    
+    .container {
+        margin: 40px auto;
+        width: 80%;
+        padding-left: 550px;
+        background-color: #ccedff;
+    }
+    .button {
+        width: 160px;
+        height: 45px;
+        border-radius: 6px;
+        font-size: 15px;
+        margin-top: 20px;
+        padding-left: 10px;
+        margin-left: 100px;
+        background-color: #0066cc;
+        color: white;
+    }
+    img {
+        width: 328px;
+        height: 287px;
+        display: block;
+        margin-bottom: 20px;
+        padding-left: 40px;
+    }
+    hr {
+        width: 400px;
+        margin-left: 0;
+    }
+    h3 {
+        display: inline-block;
+    }
+    #container {
+        display: none;
+    }
+    #container-edit {
+        display: none;
+    }
+    #container-edit input {
+        height: 32px;
+    }
+    #container-edit hr {
+        margin: 25px 0;
+    }
+    #container-edit input {
+        width: 195px;
+        font-size: 15px;
+    }
+</style>
+<script>
+    (async function init() {
+        const response = await fetch('http://localhost:3000/get-profile');
+        console.log("response", response);
+        const user = await response.json();
+        console.log(JSON.stringify(user));
+
+        document.getElementById('name1').textContent = user.name1 ? user.name1 : 'Kusum M R';
+        document.getElementById('name2').textContent = user.name2 ? user.name2 : 'Niharika B S';
+        document.getElementById('name3').textContent = user.name3 ? user.name3 : 'Anvitha K';
+
+        const cont = document.getElementById('container');
+        cont.style.display = 'block';
+    })();
+
+    async function handleUpdateProfileRequest() {
+        const contEdit = document.getElementById('container-edit');
+        const cont = document.getElementById('container');
+
+        const payload = {
+            name1: document.getElementById('input-name1').value, 
+            name2: document.getElementById('input-name2').value, 
+            name3: document.getElementById('input-name3').value
+        };
+        
+        const response = await fetch('http://localhost:3000/update-profile', {
+            method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        const jsonResponse = await response.json();
+
+        document.getElementById('name1').textContent = jsonResponse.name1;
+        document.getElementById('name2').textContent = jsonResponse.name2;
+        document.getElementById('name3').textContent = jsonResponse.name3;
+
+        cont.style.display = 'block';
+        contEdit.style.display = 'none';
+    }
+
+    function updateProfile() {
+        const contEdit = document.getElementById('container-edit');
+        const cont = document.getElementById('container');
+
+        document.getElementById('input-name1').value = document.getElementById('name1').textContent;
+        document.getElementById('input-name2').value = document.getElementById('name2').textContent;
+        document.getElementById('input-name3').value = document.getElementById('name3').textContent;
+
+        cont.style.display = 'none';
+        contEdit.style.display = 'block';
+    }
+</script>
+<body>
+    <div class='container' id='container'>
+        <h1>Cloud Computing AAT Team</h1>
+        <img src='profile-picture' alt="user-profile">
+        <span>TEAM MEMBER 1: </span><h3 id='name1'>Kusum M R</h3>
+        <hr />
+        <span>TEAM MEMBER 2: </span><h3 id='name2'>Niharika B S</h3>
+        <hr />
+        <span>TEAM MEMBER 3: </span><h3 id='name3'>Anvitha K</h3>
+        <hr />
+        <button class='button' onclick="updateProfile()">Edit Team</button>
+    </div>
+    <div class='container' id='container-edit'>
+        <h1>Cloud Computing AAT Team</h1>
+        <img src='profile-picture' alt="user-profile">
+        <span>TEAM MEMBER 1: </span><label for='input-name1'></label><input type="text" id='input-name1' value='Kusum M R' />
+        <hr />
+        <span>TEAM MEMBER 2: </span><label for='input-name2'></label><input type="text" id='input-name2' value='Niharika B S' />
+        <hr />
+        <span>TEAM MEMBER 3: </span><label for='input-name3'></label><input type="text" id='input-name3' value='Anvitha K' />
+        <hr />
+        <button class='button' onclick="handleUpdateProfileRequest()">Update Team</button>
+    </div>
+</body>
+</html>
