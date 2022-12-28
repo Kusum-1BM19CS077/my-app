@@ -3,12 +3,14 @@ let path = require('path');
 let fs = require('fs');
 let MongoClient = require('mongodb').MongoClient;
 let bodyParser = require('body-parser');
+let cors = require('cors')
 let app = express();
 
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
+app.use(cors())
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, "index.html"));
